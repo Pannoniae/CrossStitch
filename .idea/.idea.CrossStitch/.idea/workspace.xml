@@ -8,7 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dab6ab8-0927-4f39-8f28-677b0919de32" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/unknown.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossStitch/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossStitch/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unknown.aseprite" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unknown.png" beforeDir="false" afterPath="$PROJECT_DIR$/unknown.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,21 +47,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.CrossStitch.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.CrossStitch.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/home/pannoniae/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/home/pannoniae/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/home/pannoniae/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/pannoniae/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/home/pannoniae/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/home/pannoniae/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CidrLocalAttachDebugger.recentlyUsed">
       <recent name="com.jetbrains.rider.cpp.debugger.RiderCppLLDBDriverConfiguration" />
@@ -105,7 +108,8 @@
       <workItem from="1704406846362" duration="1340000" />
       <workItem from="1704408256891" duration="5309000" />
       <workItem from="1704422491146" duration="1355000" />
-      <workItem from="1704481639969" duration="6557000" />
+      <workItem from="1704481639969" duration="6578000" />
+      <workItem from="1704491487293" duration="807000" />
     </task>
     <servers />
   </component>

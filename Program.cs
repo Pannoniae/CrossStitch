@@ -99,7 +99,6 @@ public class Program {
         else {
             Raylib.BeginTextureMode(minimap);
             Raylib.ClearBackground(new Color(210, 210, 210, 255));
-            Raylib.BeginMode2D(camera);
             for (int i = minGridX; i < maxGridX; i++) {
                 for (int j = minGridY; j < maxGridY; j++) {
                     var sq = grid[i, j];
@@ -107,17 +106,16 @@ public class Program {
                 }
             }
 
-            Raylib.EndMode2D();
             Raylib.EndTextureMode();
             Raylib.BeginDrawing();
             Raylib.ClearBackground(new Color(210, 210, 210, 255));
+            Raylib.BeginMode2D(camera);
             var texture = minimap.Texture;
-            var src = new Rectangle(0, -texture.Height, texture.Width, -texture.Height);
-            var dest = new Rectangle(0, 0, Raylib.GetRenderWidth() * scaleX, Raylib.GetRenderHeight() * scaleY);
+            var src = new Rectangle(0, 0, texture.Width, -texture.Height);
+            var dest = new Rectangle(0, 0, GRIDX * SIZE, GRIDY * SIZE);
             Raylib.DrawTexturePro(texture, src, dest, Vector2.Zero, 0.0f, Color.WHITE);
+            Raylib.EndMode2D();
         }
-
-        Raylib.EndMode2D();
         Raylib.DrawText(text, Raylib.GetScreenWidth() - 300, Raylib.GetScreenHeight() - 50, 20, Color.BLACK);
         rlImGui.Begin(); // starts the ImGui content mode. Make all ImGui calls after this
         //ImGui.ShowDemoWindow();
