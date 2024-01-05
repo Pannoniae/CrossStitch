@@ -44,7 +44,7 @@ public class Program {
         rlImGui.Setup();
         unknown = Raylib.LoadTexture("unknown.png");
         camera = new Camera2D {
-            Zoom = 0.2f,
+            Zoom = 1f,
             Offset = new Vector2(0, 0)
         };
         for (var i = 0; i < grid.GetLength(0); i++) {
@@ -69,7 +69,7 @@ public class Program {
         var maxGridY = (int)Math.Min(GRIDY, max.Y / SIZE);
 
         // draw outlines too!
-        if (camera.Zoom > 1f) {
+        if (camera.Zoom >= 1f) {
             Raylib.BeginDrawing();
             Raylib.ClearBackground(new Color(210, 210, 210, 255));
             Raylib.BeginMode2D(camera);
@@ -98,7 +98,7 @@ public class Program {
         // too small, switch to minimap
         else {
             Raylib.BeginTextureMode(minimap);
-            Raylib.ClearBackground(new Color(210, 210, 210, 255));
+            Raylib.ClearBackground(SLIGHTLYWHITE);
             for (int i = minGridX; i < maxGridX; i++) {
                 for (int j = minGridY; j < maxGridY; j++) {
                     var sq = grid[i, j];
@@ -108,7 +108,7 @@ public class Program {
 
             Raylib.EndTextureMode();
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(new Color(210, 210, 210, 255));
+            Raylib.ClearBackground(SLIGHTLYWHITE);
             Raylib.BeginMode2D(camera);
             var texture = minimap.Texture;
             var src = new Rectangle(0, 0, texture.Width, -texture.Height);
@@ -116,6 +116,7 @@ public class Program {
             Raylib.DrawTexturePro(texture, src, dest, Vector2.Zero, 0.0f, Color.WHITE);
             Raylib.EndMode2D();
         }
+
         Raylib.DrawText(text, Raylib.GetScreenWidth() - 300, Raylib.GetScreenHeight() - 50, 20, Color.BLACK);
         rlImGui.Begin(); // starts the ImGui content mode. Make all ImGui calls after this
         //ImGui.ShowDemoWindow();
@@ -183,10 +184,21 @@ public class Program {
     }
 
     private static void drawGraphicsMini(Square sq, int x, int y, int fontsize, Color color) {
+        if (sq.type == "clear") {
+            return;
+        }
+
         Raylib.DrawPixel(x, y, color);
     }
 
     private static void input() {
+        // if imgui, don't handle anything
+        var io = ImGui.GetIO();
+
+        if (io.WantCaptureKeyboard) {
+            return;
+        }
+
         if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT)) {
             camera.Target += new Vector2(2, 0);
         }
@@ -201,6 +213,10 @@ public class Program {
 
         if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN)) {
             camera.Target += new Vector2(0, 2);
+        }
+
+        if (io.WantCaptureMouse) {
+            return;
         }
 
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) {
