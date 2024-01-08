@@ -2,8 +2,10 @@
 
 using System.Numerics;
 using ImGuiNET;
+using NativeFileDialogSharp;
 using Raylib_cs;
 using rlImGui_cs;
+using ImGui = ImGuiNET.ImGui;
 
 public class Program {
     public const int SIZE = 24;
@@ -79,8 +81,8 @@ public class Program {
                     drawGraphics(sq, i * SIZE, j * SIZE, 20, sq.colour);
                 }
             }
-            // get min/max visible world coords
 
+            // get min/max visible world coords
             Raylib.DrawCircleV(min, 5, Color.RED);
             Raylib.DrawCircleV(max, 5, Color.RED);
             for (int x = minGridX; x < maxGridX; x++) {
@@ -119,6 +121,17 @@ public class Program {
 
         Raylib.DrawText(text, Raylib.GetScreenWidth() - 300, Raylib.GetScreenHeight() - 50, 20, Color.BLACK);
         rlImGui.Begin(); // starts the ImGui content mode. Make all ImGui calls after this
+        // RETARDATION:
+        //if ((bool) Raylib.IsWindowFullscreen() || (bool) Raylib.IsWindowMaximized())
+        // {
+        //   int currentMonitor = Raylib.GetCurrentMonitor();
+        //   io.DisplaySize = new Vector2((float) Raylib.GetMonitorWidth(currentMonitor), (float) Raylib.GetMonitorHeight(currentMonitor));
+        // }
+        // else
+        //   io.DisplaySize = new Vector2((float) Raylib.GetScreenWidth(), (float) Raylib.GetScreenHeight());
+        var io = ImGui.GetIO();
+        io.DisplaySize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+
         //ImGui.ShowDemoWindow();
         if (ImGui.RadioButton("x", stitchType == "x")) {
             stitchType = "x";
@@ -142,6 +155,24 @@ public class Program {
 
         if (ImGui.ColorPicker4("colour", ref fakeColour, ImGuiColorEditFlags.AlphaBar)) {
             colour = toColor(fakeColour);
+        }
+
+        if (ImGui.BeginMainMenuBar()) {
+            if (ImGui.BeginMenu("test")) {
+                if (ImGui.MenuItem("Undo", "CTRL+Z")) {
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("test2")) {
+                if (ImGui.MenuItem("Undo", "CTRL+Z")) {
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.EndMainMenuBar();
         }
 
         Raylib.DrawFPS(0, 0);
