@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ImGuiNET;
 using NativeFileDialogSharp;
 using Raylib_cs;
@@ -21,8 +23,7 @@ public class Program {
 
     public static RenderTexture2D minimap;
 
-    public static int scaleX;
-    public static int scaleY;
+    public static bool initModal = true;
 
     public static Camera2D camera;
     public static Texture2D unknown;
@@ -39,7 +40,7 @@ public class Program {
     }
 
     private static void setup() {
-        Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT |
+        Raylib.SetConfigFlags(ConfigFlags.FLAG_VSYNC_HINT |
                               ConfigFlags.FLAG_WINDOW_RESIZABLE);
         Raylib.InitWindow(1280, 800, "Stitch thing");
         Raylib.SetTargetFPS(60);
@@ -56,25 +57,32 @@ public class Program {
         }
 
         minimap = Raylib.LoadRenderTexture(GRIDX, GRIDY);
-        scaleX = Raylib.GetRenderWidth() / GRIDX;
-        scaleY = Raylib.GetRenderHeight() / GRIDY;
     }
 
     private static void loop() {
         // inside your game loop, between BeginDrawing() and EndDrawing()
         input();
+        render();
+        UI();
+        Raylib.EndDrawing();
+    }
+
+    private static void render() {
         var min = getMinVisible();
         var max = getMaxVisible();
         var minGridX = (int)Math.Max(0, min.X / SIZE);
         var minGridY = (int)Math.Max(0, min.Y / SIZE);
-        var maxGridX = (int)Math.Min(GRIDX, max.X / SIZE);
-        var maxGridY = (int)Math.Min(GRIDY, max.Y / SIZE);
+        var maxGridX = (int)Math.Min(GRIDX, max.X / SIZE + 1);
+        var maxGridY = (int)Math.Min(GRIDY, max.Y / SIZE + 1);
 
         // draw outlines too!
         if (camera.Zoom >= 1f) {
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(new Color(210, 210, 210, 255));
+            // background
+            Raylib.ClearBackground(SLIGHTLYWHITE);
             Raylib.BeginMode2D(camera);
+            Raylib.DrawRectangle(minGridX * SIZE, minGridY * SIZE, (maxGridX - minGridX) * SIZE, (maxGridY - minGridY) * SIZE, Color.RAYWHITE);
+
             for (int i = minGridX; i < maxGridX; i++) {
                 for (int j = minGridY; j < maxGridY; j++) {
                     var sq = grid[i, j];
@@ -100,7 +108,7 @@ public class Program {
         // too small, switch to minimap
         else {
             Raylib.BeginTextureMode(minimap);
-            Raylib.ClearBackground(SLIGHTLYWHITE);
+            Raylib.ClearBackground(Color.RAYWHITE);
             for (int i = minGridX; i < maxGridX; i++) {
                 for (int j = minGridY; j < maxGridY; j++) {
                     var sq = grid[i, j];
@@ -118,7 +126,9 @@ public class Program {
             Raylib.DrawTexturePro(texture, src, dest, Vector2.Zero, 0.0f, Color.WHITE);
             Raylib.EndMode2D();
         }
+    }
 
+    private static void UI() {
         Raylib.DrawText(text, Raylib.GetScreenWidth() - 300, Raylib.GetScreenHeight() - 50, 20, Color.BLACK);
         rlImGui.Begin(); // starts the ImGui content mode. Make all ImGui calls after this
         // RETARDATION:
@@ -131,6 +141,32 @@ public class Program {
         //   io.DisplaySize = new Vector2((float) Raylib.GetScreenWidth(), (float) Raylib.GetScreenHeight());
         var io = ImGui.GetIO();
         io.DisplaySize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        if (initModal) {
+            ImGui.OpenPopup("Loaded symbols");
+        }
+
+        // centre the modal
+        ImGui.SetNextWindowSize(new Vector2(400, 100));
+        ImGui.SetNextWindowPos(ImGui.GetMainViewport().GetCenter(), ImGuiCond.Always, new Vector2(0.5f, 0.8f));
+        if (ImGui.BeginPopupModal("Loaded symbols", ref initModal, ImGuiWindowFlags.NoResize)) {
+            ImGui.Text("Loaded 0 symbols. Do you want to open the directory?");
+            ImGui.Separator();
+
+            if (ImGui.Button("Continue")) {
+                initModal = false;
+                ImGui.CloseCurrentPopup();
+            }
+
+            ImGui.SetItemDefaultFocus();
+            ImGui.SameLine();
+            if (ImGui.Button("Open directory")) {
+                openDirectory();
+                initModal = false;
+                ImGui.CloseCurrentPopup();
+            }
+
+            ImGui.EndPopup();
+        }
 
         //ImGui.ShowDemoWindow();
         if (ImGui.RadioButton("x", stitchType == "x")) {
@@ -158,8 +194,21 @@ public class Program {
         }
 
         if (ImGui.BeginMainMenuBar()) {
-            if (ImGui.BeginMenu("test")) {
-                if (ImGui.MenuItem("Undo", "CTRL+Z")) {
+            if (ImGui.BeginMenu("File")) {
+                if (ImGui.MenuItem("New...")) {
+                }
+
+                if (ImGui.MenuItem("Open...", "CTRL+O")) {
+                }
+
+                if (ImGui.MenuItem("Save", "CTRL+S")) {
+                }
+
+                if (ImGui.MenuItem("Save as...", "CTRL+SHIFT+S")) {
+                }
+
+                if (ImGui.MenuItem("Exit", "ALT+F4")) {
+                    Environment.Exit(0);
                 }
 
                 ImGui.EndMenu();
@@ -178,8 +227,19 @@ public class Program {
         Raylib.DrawFPS(0, 0);
 
         rlImGui.End(); // ends the ImGui content mode. Make all ImGui calls before this
+    }
 
-        Raylib.EndDrawing();
+    private static void openDirectory() {
+        /*if (OperatingSystem.IsLinux()) {
+
+        }
+        else if (OperatingSystem.IsWindows()) {
+
+        }
+        else
+        {*/
+
+        //}
     }
 
     private static Vector2 getMinVisible() {
@@ -296,5 +356,5 @@ public class Program {
 
 public class Square {
     public string type = "";
-    public Color colour = Program.SLIGHTLYWHITE;
+    public Color colour = Color.RAYWHITE;
 }
