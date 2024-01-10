@@ -1,25 +1,34 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ImGuiNET;
-using NativeFileDialogSharp;
 using Raylib_cs;
 using rlImGui_cs;
-using ImGui = ImGuiNET.ImGui;
+
+namespace CrossStitch;
 
 public class Program {
-    public const int SIZE = 24;
+    public const int SIZE = 16;
+    public const int EDGE = 1;
     public const int GRIDX = 250;
     public const int GRIDY = 200;
     public const float scrollSpeed = 0.20f;
-    public static Square[,] grid = new Square[GRIDX, GRIDY];
+    public const int tileOffset = 2;
+    public const string PATTERNDIR = "Patterns";
+    public const string SYMBOLDIR = "Symbols";
+
+
+    public const float MINZOOM = 1f;
+    public const float DEFAULTZOOM = 1f; // / 3f;
+
+
+    public static Grid grid = new();
     public static string stitchType = "";
     public static Color colour = Color.BLACK;
     public static Vector4 fakeColour = new(0, 0, 0, 1);
 
-    public static Color SLIGHTLYWHITE = new Color(200, 200, 200, 255);
+    public static Color SLIGHTLYWHITE = new(200, 200, 200, 255);
 
     public static RenderTexture2D minimap;
 
@@ -40,21 +49,16 @@ public class Program {
     }
 
     private static void setup() {
-        Raylib.SetConfigFlags(ConfigFlags.FLAG_VSYNC_HINT |
+        Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT |
                               ConfigFlags.FLAG_WINDOW_RESIZABLE);
         Raylib.InitWindow(1280, 800, "Stitch thing");
         Raylib.SetTargetFPS(60);
         rlImGui.Setup();
         unknown = Raylib.LoadTexture("unknown.png");
         camera = new Camera2D {
-            Zoom = 1f,
+            Zoom = DEFAULTZOOM,
             Offset = new Vector2(0, 0)
         };
-        for (var i = 0; i < grid.GetLength(0); i++) {
-            for (var j = 0; j < grid.GetLength(1); j++) {
-                grid[i, j] = new Square();
-            }
-        }
 
         minimap = Raylib.LoadRenderTexture(GRIDX, GRIDY);
     }
@@ -76,12 +80,13 @@ public class Program {
         var maxGridY = (int)Math.Min(GRIDY, max.Y / SIZE + 1);
 
         // draw outlines too!
-        if (camera.Zoom >= 1f) {
+        if (camera.Zoom >= MINZOOM) {
             Raylib.BeginDrawing();
             // background
             Raylib.ClearBackground(SLIGHTLYWHITE);
             Raylib.BeginMode2D(camera);
-            Raylib.DrawRectangle(minGridX * SIZE, minGridY * SIZE, (maxGridX - minGridX) * SIZE, (maxGridY - minGridY) * SIZE, Color.RAYWHITE);
+            Raylib.DrawRectangle(minGridX * SIZE, minGridY * SIZE, (maxGridX - minGridX) * SIZE,
+                (maxGridY - minGridY) * SIZE, Color.RAYWHITE);
 
             for (int i = minGridX; i < maxGridX; i++) {
                 for (int j = minGridY; j < maxGridY; j++) {
@@ -91,15 +96,15 @@ public class Program {
             }
 
             // get min/max visible world coords
-            Raylib.DrawCircleV(min, 5, Color.RED);
-            Raylib.DrawCircleV(max, 5, Color.RED);
+            //Raylib.DrawCircleV(min, 5, Color.RED);
+            //Raylib.DrawCircleV(max, 5, Color.RED);
             for (int x = minGridX; x < maxGridX; x++) {
-                Raylib.DrawLineEx(new Vector2(x * SIZE, minGridY * SIZE), new Vector2(x * SIZE, maxGridY * SIZE), 2,
+                Raylib.DrawLineEx(new Vector2(x * SIZE, minGridY * SIZE), new Vector2(x * SIZE, maxGridY * SIZE), EDGE,
                     Color.RED);
             }
 
             for (int y = minGridY; y < maxGridY; y++) {
-                Raylib.DrawLineEx(new Vector2(minGridX * SIZE, y * SIZE), new Vector2(maxGridX * SIZE, y * SIZE), 2,
+                Raylib.DrawLineEx(new Vector2(minGridX * SIZE, y * SIZE), new Vector2(maxGridX * SIZE, y * SIZE), EDGE,
                     Color.RED);
             }
 
@@ -195,13 +200,17 @@ public class Program {
 
         if (ImGui.BeginMainMenuBar()) {
             if (ImGui.BeginMenu("File")) {
+                var filename = "save.cst";
+                var file = Path.Combine(PATTERNDIR, filename);
                 if (ImGui.MenuItem("New...")) {
                 }
 
                 if (ImGui.MenuItem("Open...", "CTRL+O")) {
+                    grid = FileIO.fromFile(file);
                 }
 
                 if (ImGui.MenuItem("Save", "CTRL+S")) {
+                    FileIO.toFile(file, grid);
                 }
 
                 if (ImGui.MenuItem("Save as...", "CTRL+SHIFT+S")) {
@@ -230,16 +239,16 @@ public class Program {
     }
 
     private static void openDirectory() {
-        /*if (OperatingSystem.IsLinux()) {
-
+        var cwd = Directory.GetCurrentDirectory();
+        if (OperatingSystem.IsLinux()) {
+            Process.Start("xdg-open", $"{cwd}");
         }
         else if (OperatingSystem.IsWindows()) {
-
+            Process.Start($"{cwd}");
         }
-        else
-        {*/
-
-        //}
+        else {
+            throw new NotSupportedException("Unable to open file manager.");
+        }
     }
 
     private static Vector2 getMinVisible() {
@@ -251,7 +260,6 @@ public class Program {
     }
 
     private static void drawGraphics(Square sq, int x, int y, int fontsize, Color color) {
-        const int offset = 4;
         if (sq.type == "x") {
             // x cross
             Raylib.DrawLineEx(new Vector2(x, y), new Vector2(x + SIZE, y + SIZE), 2, color);
@@ -270,7 +278,7 @@ public class Program {
             return;
         }
         else {
-            Raylib.DrawTexture(unknown, x + offset, y + offset, color);
+            Raylib.DrawTexture(unknown, x + tileOffset, y + tileOffset, color);
         }
     }
 
@@ -326,8 +334,8 @@ public class Program {
     }
 
     private static bool isInGrid(Vector2 pos) {
-        return pos.X > 0 && pos.X < GRIDX * SIZE &&
-               pos.Y > 0 && pos.Y < GRIDY * SIZE;
+        return pos.X is > 0 and < GRIDX * SIZE &&
+               pos.Y is > 0 and < GRIDY * SIZE;
     }
 
     private static void clickGrid(Vector2 pos) {
@@ -357,4 +365,25 @@ public class Program {
 public class Square {
     public string type = "";
     public Color colour = Color.RAYWHITE;
+}
+
+public class Grid {
+    public int width = Program.GRIDX;
+    public int height = Program.GRIDY;
+
+    public Square[,] squares;
+
+    public Grid() {
+        squares = new Square[width, height];
+        for (var i = 0; i < width; i++) {
+            for (var j = 0; j < height; j++) {
+                squares[i, j] = new Square();
+            }
+        }
+    }
+
+    public Square this[int x, int y] {
+        get => squares[x, y];
+        set => squares[x, y] = value;
+    }
 }

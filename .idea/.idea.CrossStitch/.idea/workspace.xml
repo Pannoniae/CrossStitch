@@ -8,7 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dab6ab8-0927-4f39-8f28-677b0919de32" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FileIO.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Patterns/put_patterns_here.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Symbols/put_symbols_here.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossStitch/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossStitch/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CrossStitch.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CrossStitch.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,6 +31,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/405ca8ffe3bb442f90408cb7685551ad12800/93/f4b97b37/RuntimeEnvironment.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/93/56efd6d0/RenderTexture2D.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/9e/92e4cdab/Camera2D.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/af/c213f873/CBool.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/b4/dfbd891e/AnsiBuffer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/b5/a83f55c5/AnsiStringUtils.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/81360bb76dc644ddbc7d7d1021dd649215a00/c1/82894aa4/Raylib.cs" root0="SKIP_HIGHLIGHTING" />
@@ -35,11 +40,13 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/23/b38555a0/Vector2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/3e/55d833b5/NonVersionableAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/4b/e15b4c16/Marshal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/4c/4348675c/Stream.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/4f/69002328/OperatingSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/51/680cfaee/Vector3.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/9f/a768ab47/CallingConvention.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a07029048701444890c3f5c7eac0abb8b2ca00/b3/0723dcfb/Vector4.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a9eaf8ee43c64a36afdedc06fb72ba0c10de00/c0/17de69bd/rlImGui.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a9eaf8ee43c64a36afdedc06fb72ba0c10de00/c1/1f19ed0e/FontAwesome6.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -121,7 +128,9 @@
       <workItem from="1704675138615" duration="1245000" />
       <workItem from="1704690456469" duration="1328000" />
       <workItem from="1704695328719" duration="8009000" />
-      <workItem from="1704758991802" duration="3516000" />
+      <workItem from="1704758991802" duration="3793000" />
+      <workItem from="1704772971365" duration="3585000" />
+      <workItem from="1704840204808" duration="7850000" />
     </task>
     <task id="LOCAL-00001" summary="something">
       <option name="closed" value="true" />
@@ -147,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704691181987</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- fix menu bar">
+      <option name="closed" value="true" />
+      <created>1704768513742</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1704768513742</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
@@ -156,6 +173,7 @@
     <MESSAGE value="something" />
     <MESSAGE value="- fix background colour&#10;- fix UI input clickthrough" />
     <MESSAGE value="- okay so we know how to make a menu now" />
-    <option name="LAST_COMMIT_MESSAGE" value="- okay so we know how to make a menu now" />
+    <MESSAGE value="- fix menu bar" />
+    <option name="LAST_COMMIT_MESSAGE" value="- fix menu bar" />
   </component>
 </project>
